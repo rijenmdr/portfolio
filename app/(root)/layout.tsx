@@ -1,4 +1,5 @@
-import { Navbar } from "@/components/common";
+import Footer from "@/components/common/footer";
+import Navbar from "@/components/common/navbar";
 
 export default function RootLayout({
   children,
@@ -6,13 +7,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-[100dvh] flex-col">
-        <div className="items-start inline-flex">
-            <Navbar/>
-            <main className="mt-[136px] wrapper mb-8 px-4">
-              {children}
-            </main>
-        </div>
-    </div>
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
   );
 }

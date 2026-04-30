@@ -4,131 +4,164 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+  --font-serif: var(--font-dm-serif);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-jetbrains-mono);
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Light mode */
+    --ink: #FAFAF8;
+    --ink2: #F4F2EE;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE8;
+    --line: #E2DDD8;
+    --line2: #C8C3BC;
+    --muted: #9A9490;
+    --body: #5A5652;
+    --heading: #1A1814;
+    --accent: #D4820A;
+    --accent2: #B8700A;
+    --accent-glow: rgba(212, 130, 10, 0.15);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --font-serif: 'DM Serif Display', serif;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Dark mode */
+    --ink: #0A0A0A;
+    --ink2: #111111;
+    --surface: #161616;
+    --surface2: #1E1E1E;
+    --line: #2A2A2A;
+    --line2: #383838;
+    --muted: #666666;
+    --body: #A8A8A8;
+    --heading: #F0EDE8;
+    --accent: #F5A623;
+    --accent2: #E8941A;
+    --accent-glow: rgba(245, 166, 35, 0.12);
   }
 }
 
-body {
-  list-style: none;
-  padding: 0;
+* {
   margin: 0;
-  scroll-behavior: smooth;
-  font-family: var(--font-ibmPlexSans);
+  padding: 0;
   box-sizing: border-box;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+body {
+  background: var(--ink);
+  color: var(--body);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.7;
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
 }
 
-@layer utilities {
-  .wrapper {
-    @apply max-w-[1440px] lg:mx-auto px-4 md:px-10 w-full;
-  }
+/* Typography */
+.font-serif { font-family: var(--font-serif); }
+.font-mono  { font-family: var(--font-mono); }
 
-  .linear-gradient {
-    @apply bg-gradient-to-r from-orange from-0% via-red via-[52%] to-purple to-100%
-  }
-  
-  .heading-1 {
-    @apply font-bold text-[90px] leading-[90px];
-  }
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
-  .heading-2 {
-    @apply font-bold text-5xl leading-[56px];
-  }
+/* Selection */
+::selection { background: var(--accent); color: var(--ink); }
 
-  .heading-3 {
-    @apply font-bold text-[40px] leading-[48px];
-  }
+/* Wrapper */
+.wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
 
-  .heading-4 {
-    @apply font-bold text-[32px] leading-10;
-  }
+@media (max-width: 768px) {
+  .wrapper { padding: 0 20px; }
+}
 
-  .heading-5 {
-    @apply font-bold text-3xl;
-  }
+/* Section tag */
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-tag::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  transition: background 0.4s;
+}
 
-  .heading-6 {
-    @apply font-bold text-2xl leading-[32px];
-  }
+/* Section heading */
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 4vw, 52px);
+  color: var(--heading);
+  line-height: 1.1;
+  font-weight: 400;
+  transition: color 0.4s;
+}
 
-  .text-1 {
-    @apply font-normal text-lg leading-5
-  }
+/* Skill bar */
+.skill-bar-wrap {
+  margin-top: 10px;
+  height: 1px;
+  background: var(--line);
+  position: relative;
+  transition: background 0.4s;
+}
+.skill-bar {
+  height: 1px;
+  background: var(--accent);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  .text-2 {
-    @apply font-semibold text-lg leading-normal
-  }
+/* Marquee */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Code card syntax */
+.code-k  { color: #C792EA; }
+.code-v  { color: #82AAFF; }
+.code-s  { color: var(--accent); }
+.code-c  { color: var(--muted); }
+.code-fn { color: #80CBC4; }
+
+/* Noise overlay for depth */
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
 }

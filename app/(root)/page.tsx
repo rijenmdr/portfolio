@@ -1,30 +1,19 @@
-import ContentImage from "@/container/home/ContentImage";
-import ContentLeft from "@/container/home/ContentLeft";
-import ContentSocialMedia from "@/container/home/ContentSocialMedia";
-import { getHomeProfile } from "@/sanity/sanity.query";
-import { HOMEPAGE_GET_PROFILE_PROJECTION } from "@/static/home";
-import { User } from "@/type/user";
+import Hero from "@/container/hero/hero";
+import Marquee from "@/container/hero/marque";
+import About from "@/container/about/about";
+import Projects from "@/container/projects/projects";
+import Experience from "@/container/experience/experience";
+import Contact from "@/container/contact/contact";
 
-export default async function Home() {
-  const data: User = await getHomeProfile(HOMEPAGE_GET_PROFILE_PROJECTION);
-
+export default function Home() {
   return (
-    <section className="flex flex-col-reverse lg:flex-row w-full justify-between items-center">
-      <ContentLeft
-        name={data?.fullName}
-        role={data?.role}
-        city={data?.city}
-        email={data?.email}
-        phoneNumber={data?.phoneNumber}
-      />
-
-      <ContentImage
-        image={data?.profileImage}
-      />
-
-      <ContentSocialMedia 
-        socialLinks={data?.socialLinks}
-      />
-    </section>
+    <main>
+      <Hero />
+      <Marquee />
+      <About />
+      <Projects />
+      <Experience />
+      <Contact />
+    </main>
   );
 }
