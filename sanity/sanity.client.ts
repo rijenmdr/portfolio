@@ -6,7 +6,7 @@ const config: ClientConfig = {
   dataset: dataset,
   apiVersion: apiVersion,
   useCdn: false,
-  token: process.env.NEXT_PUBLIC_SANITY_API_TOKEN
+  token: process.env.SANITY_API_TOKEN
 };
 
 const client = createClient(config);
