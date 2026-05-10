@@ -9,6 +9,7 @@ const ITEMS = [
     { text: "◆ AWS · Nginx · Docker", accent: true },
     { text: "PostgreSQL", accent: false },
     { text: "◆ 4+ Years Experience", accent: true },
+    { text: "Node.js / Express", accent: false },
 ];
 
 // Duplicate for seamless loop

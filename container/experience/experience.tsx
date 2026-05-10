@@ -5,10 +5,24 @@ import Animate from "@/components/common/animate";
 
 const EXPERIENCES = [
     {
-        period: "Nov 2022 — Present",
-        role: "Software Developer",
-        company: "Insight Workshop · Extra Space Storage (US Client)",
+        period: "Mar 2025 — Present",
+        role: "Software Engineer",
+        company: "Extra Space Storage",
         badge: "Current",
+        duration: null,
+    },
+    {
+        period: "Jan 2025 — Jan 2026",
+        role: "Freelancer",
+        company: "Sponsorvista",
+        badge: "1yrs",
+        duration: null,
+    },
+    {
+        period: "Nov 2022 — Oct 2024",
+        role: "Software Engineer",
+        company: "Asterdio Inc",
+        badge: "2yrs",
         duration: null,
     },
     {
@@ -16,13 +30,6 @@ const EXPERIENCES = [
         role: "Frontend Developer",
         company: "Silk Innovation",
         badge: "1yr 4mo",
-        duration: null,
-    },
-    {
-        period: "Sep 2020 — Jun 2021",
-        role: "Software Developer Intern",
-        company: "IT Glance",
-        badge: "9 months",
         duration: null,
     },
 ];
@@ -41,66 +48,27 @@ function ExpRow({
             <div
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "200px 1fr auto",
-                    gap: 40,
-                    alignItems: "center",
-                    padding: "32px 0",
-                    borderBottom: "1px solid var(--line)",
-                    transition: "border-color 0.4s",
-                    cursor: "default",
-                }}
-                className="exp-row"
+                className="grid cursor-default grid-cols-1 items-center gap-2 border-b border-[var(--line)] py-8 transition-colors duration-400 sm:grid-cols-[200px_1fr_auto] sm:gap-10"
             >
-                <div
-                    style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 11,
-                        color: "var(--muted)",
-                        letterSpacing: "0.04em",
-                    }}
-                >
+                <div className="font-mono text-[11px] tracking-[0.04em] text-[var(--muted)]">
                     {exp.period}
                 </div>
 
                 <div>
                     <div
-                        style={{
-                            fontFamily: "var(--font-serif)",
-                            fontSize: 22,
-                            color: hovered ? "var(--accent)" : "var(--heading)",
-                            fontWeight: 400,
-                            marginBottom: 4,
-                            transition: "color 0.25s",
-                        }}
+                        className={`mb-1 font-serif text-[22px] font-normal transition-colors duration-200 ${hovered ? "text-[var(--accent)]" : "text-[var(--heading)]"
+                            }`}
                     >
                         {exp.role}
                     </div>
-                    <div
-                        style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 11,
-                            color: "var(--muted)",
-                            letterSpacing: "0.04em",
-                        }}
-                    >
+                    <div className="font-mono text-[11px] tracking-[0.04em] text-[var(--muted)]">
                         {exp.company}
                     </div>
                 </div>
 
                 <div
-                    style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 10,
-                        color: "var(--accent)",
-                        border: "1px solid rgba(245,166,35,0.3)",
-                        padding: "4px 12px",
-                        letterSpacing: "0.06em",
-                        whiteSpace: "nowrap",
-                        transition: "border-color 0.2s, background 0.2s",
-                        background: hovered ? "var(--accent-glow)" : "transparent",
-                    }}
+                    className={`whitespace-nowrap border border-[rgba(245,166,35,0.3)] px-3 py-1 font-mono text-[10px] tracking-[0.06em] text-[var(--accent)] transition-colors duration-200 ${hovered ? "bg-[var(--accent-glow)]" : "bg-transparent"
+                        }`}
                 >
                     {exp.badge}
                 </div>
@@ -113,34 +81,21 @@ export default function Experience() {
     return (
         <section
             id="experience"
-            style={{
-                padding: "100px 40px",
-                maxWidth: 1100,
-                margin: "0 auto",
-            }}
+            className="mx-auto max-w-[1100px] px-10 py-[100px]"
         >
             <div className="section-tag">03 — Experience</div>
 
             <Animate>
-                <h2 className="section-heading" style={{ marginBottom: 60 }}>
+                <h2 className="section-heading mb-[60px]">
                     Where I&apos;ve built.
                 </h2>
             </Animate>
 
-            <div style={{ borderTop: "1px solid var(--line)", transition: "border-color 0.4s" }}>
+            <div className="border-t border-[var(--line)] transition-colors duration-400">
                 {EXPERIENCES.map((exp, i) => (
                     <ExpRow key={exp.role} exp={exp} index={i} />
                 ))}
             </div>
-
-            <style>{`
-        @media (max-width: 640px) {
-          .exp-row {
-            grid-template-columns: 1fr !important;
-            gap: 8px !important;
-          }
-        }
-      `}</style>
         </section>
     );
 }

@@ -30,6 +30,7 @@ const CODE_LINES = [
         content: (
             <>
                 &nbsp;&nbsp;<span className="code-v">backend</span>: [
+                <span className="code-s">&apos;Node.js&apos;</span>,{" "}
                 <span className="code-s">&apos;Laravel&apos;</span>,{" "}
                 <span className="code-s">&apos;PostgreSQL&apos;</span>],
             </>
@@ -135,29 +136,13 @@ export default function Hero() {
                         <div className="flex gap-5 items-center flex-wrap">
                             <Link
                                 href="#projects"
-                                className="bg-[var(--accent)] text-[var(--ink)] px-7 py-3 font-mono text-xs no-underline font-medium inline-flex items-center gap-2 transition-colors duration-200"
-                                onMouseEnter={(e) => {
-                                    (e.currentTarget as HTMLElement).style.background = "var(--accent2)";
-                                    (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    (e.currentTarget as HTMLElement).style.background = "var(--accent)";
-                                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                                }}
+                                className="inline-flex items-center gap-2 bg-[var(--accent)] px-7 py-3 font-mono text-xs font-medium text-[var(--ink)] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--accent2)]"
                             >
                                 View my work ↗
                             </Link>
                             <Link
                                 href="#contact"
-                                className="text-[var(--body)] font-mono text-xs tracking-[0.06em] no-underline border-b border-[var(--line2)] pb-0.5 transition-colors duration-200"
-                                onMouseEnter={(e) => {
-                                    (e.currentTarget as HTMLElement).style.color = "var(--heading)";
-                                    (e.currentTarget as HTMLElement).style.borderColor = "var(--body)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    (e.currentTarget as HTMLElement).style.color = "var(--body)";
-                                    (e.currentTarget as HTMLElement).style.borderColor = "var(--line2)";
-                                }}
+                                className="border-b border-[var(--line2)] pb-0.5 font-mono text-xs tracking-[0.06em] text-[var(--body)] no-underline transition-colors duration-200 hover:border-[var(--body)] hover:text-[var(--heading)]"
                             >
                                 Let&apos;s talk
                             </Link>
@@ -175,11 +160,10 @@ export default function Hero() {
                             {CODE_LINES.map((line, i) => (
                                 <div
                                     key={i}
-                                    style={{
-                                        opacity: i < visibleLines ? 1 : 0,
-                                        transform: i < visibleLines ? "translateX(0)" : "translateX(-8px)",
-                                        transition: "opacity 0.25s, transform 0.25s",
-                                    }}
+                                    className={`transition-all duration-200 ${i < visibleLines
+                                        ? "translate-x-0 opacity-100"
+                                        : "-translate-x-2 opacity-0"
+                                        }`}
                                 >
                                     <span className="text-[var(--line2)] select-none mr-4">
                                         {line.num}
@@ -192,15 +176,7 @@ export default function Hero() {
 
                     <Animate delay={320} direction="right">
                         {/* Stats */}
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(3, 1fr)",
-                                gap: 1,
-                                background: "var(--line)",
-                            }}
-                            className="grid grid-cols-1 sm:grid-cols-3 gap-1 bg-[var(--line)]"
-                        >
+                        <div className="grid grid-cols-1 gap-1 bg-[var(--line)] sm:grid-cols-3">
                             {STATS.map((s) => (
                                 <div
                                     key={s.label}

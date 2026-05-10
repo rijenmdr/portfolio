@@ -1,83 +1,84 @@
 "use client";
 
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "sonner";
 import Animate from "@/components/common/animate";
+import { sendContactMessage } from "@/sanity/sanity.mutation";
+
+const validationSchema = z.object({
+    name: z.string().min(1, { message: "Name is required." }),
+    email: z.string().min(1, { message: "Email is required." }).email({ message: "Invalid email address." }),
+    message: z.string().min(1, { message: "Message is required." }),
+});
 
 const LINKS = [
-    { label: "rijen@email.com", href: "mailto:rijen@email.com", arrow: "↗" },
-    { label: "github.com/rijen", href: "#", arrow: "↗" },
-    { label: "linkedin.com/in/rijen", href: "#", arrow: "↗" },
-    { label: "Download Resume", href: "#", arrow: "↓" },
+    { label: "rijenmdr47@gmail.com", href: "mailto:rijenmdr47@gmail.com", arrow: "↗" },
+    { label: "github.com/rijenmdr", href: "https://github.com/rijenmdr", arrow: "↗" },
+    { label: "linkedin.com/in/rijenmanandhar", href: "https://www.linkedin.com/in/rijenmanandhar", arrow: "↗" },
+    { label: "Download Resume", href: "/cv/cv.pdf", arrow: "↓" },
 ];
 
 export default function Contact() {
-    const [form, setForm] = useState({ name: "", email: "", message: "" });
-    const [sending, setSending] = useState(false);
+    const form = useForm<z.infer<typeof validationSchema>>({
+        resolver: zodResolver(validationSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            message: "",
+        },
+    });
+
     const [sent, setSent] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSending(true);
-        // Wire to your Sanity mutation here
-        await new Promise((r) => setTimeout(r, 1200));
-        setSending(false);
-        setSent(true);
-        setForm({ name: "", email: "", message: "" });
-    };
+    async function onSubmit(values: z.infer<typeof validationSchema>) {
+        try {
+            await sendContactMessage(values);
+            form.reset();
+            setSent(true);
+            // Reset sent message after 3 seconds
+            setTimeout(() => setSent(false), 3000);
+        } catch (error) {
+            toast("Something went wrong", {
+                description: error instanceof Error && error.message || "An error occurred while sending your message. Please try again.",
+            });
+        }
+    }
 
     return (
         <div
             id="contact"
-            style={{
-                background: "var(--surface)",
-                borderTop: "1px solid var(--line)",
-                padding: "100px 40px",
-                transition: "background 0.4s, border-color 0.4s",
-            }}
+            className="border-t border-[var(--line)] bg-[var(--surface)] px-10 py-[100px] transition-colors duration-400"
         >
             <div
-                style={{
-                    maxWidth: 1100,
-                    margin: "0 auto",
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 80,
-                    alignItems: "start",
-                }}
-                className="contact-grid"
+                className="mx-auto grid max-w-[1100px] grid-cols-1 items-start gap-12 md:grid-cols-2 md:gap-20"
             >
                 {/* Left */}
                 <Animate direction="left">
                     <div>
-                        <div className="section-tag" style={{ marginBottom: 32 }}>
+                        <div className="section-tag mb-8">
                             04 — Contact
                         </div>
 
                         <h2
-                            style={{
-                                fontFamily: "var(--font-serif)",
-                                fontSize: "clamp(48px, 6vw, 72px)",
-                                color: "var(--heading)",
-                                lineHeight: 1.05,
-                                fontWeight: 400,
-                                marginBottom: 24,
-                                transition: "color 0.4s",
-                            }}
+                            className="mb-6 font-serif text-[clamp(48px,6vw,72px)] font-normal leading-[1.05] text-[var(--heading)] transition-colors duration-400"
                         >
                             Let&apos;s build
                             <br />
                             something{" "}
-                            <em style={{ color: "var(--accent)", fontStyle: "italic" }}>
+                            <em className="italic text-[var(--accent)]">
                                 great.
                             </em>
                         </h2>
 
-                        <p style={{ fontSize: 15, color: "var(--body)", lineHeight: 1.8 }}>
+                        <p className="text-[15px] leading-[1.8] text-[var(--body)]">
                             Open to full-time remote roles, freelance projects, and
                             interesting collaborations.
                         </p>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: 0, marginTop: 40 }}>
+                        <div className="mt-10 flex flex-col">
                             {LINKS.map((link) => (
                                 <ContactLink key={link.label} {...link} />
                             ))}
@@ -88,86 +89,77 @@ export default function Contact() {
                 {/* Right — form */}
                 <Animate direction="right" delay={120}>
                     <form
-                        onSubmit={handleSubmit}
-                        style={{ display: "flex", flexDirection: "column", gap: 28 }}
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex flex-col gap-7"
                     >
                         {sent ? (
                             <div
-                                style={{
-                                    border: "1px solid var(--accent)",
-                                    padding: "24px",
-                                    fontFamily: "var(--font-mono)",
-                                    fontSize: 13,
-                                    color: "var(--accent)",
-                                    letterSpacing: "0.04em",
-                                    textAlign: "center",
-                                }}
+                                className="border border-[var(--accent)] p-6 text-center font-mono text-[13px] tracking-[0.04em] text-[var(--accent)]"
                             >
                                 Message sent. I&apos;ll be in touch soon ✓
                             </div>
                         ) : (
                             <>
-                                <FormField
-                                    label="Name"
-                                    type="text"
-                                    placeholder="Your name"
-                                    value={form.name}
-                                    onChange={(v) => setForm((f) => ({ ...f, name: v }))}
+                                <Controller
+                                    name="name"
+                                    control={form.control}
+                                    render={({ field, fieldState: { error } }) => (
+                                        <FormField
+                                            label="Name"
+                                            type="text"
+                                            placeholder="Your name"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            error={error?.message}
+                                        />
+                                    )}
                                 />
-                                <FormField
-                                    label="Email"
-                                    type="email"
-                                    placeholder="your@email.com"
-                                    value={form.email}
-                                    onChange={(v) => setForm((f) => ({ ...f, email: v }))}
+                                <Controller
+                                    name="email"
+                                    control={form.control}
+                                    render={({ field, fieldState: { error } }) => (
+                                        <FormField
+                                            label="Email"
+                                            type="email"
+                                            placeholder="your@email.com"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            error={error?.message}
+                                        />
+                                    )}
                                 />
-                                <FormField
-                                    label="Message"
-                                    type="textarea"
-                                    placeholder="What are you working on?"
-                                    value={form.message}
-                                    onChange={(v) => setForm((f) => ({ ...f, message: v }))}
+                                <Controller
+                                    name="message"
+                                    control={form.control}
+                                    render={({ field, fieldState: { error } }) => (
+                                        <FormField
+                                            label="Message"
+                                            type="textarea"
+                                            placeholder="What are you working on?"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            error={error?.message}
+                                        />
+                                    )}
                                 />
                                 <button
                                     type="submit"
-                                    disabled={sending}
-                                    style={{
-                                        alignSelf: "flex-start",
-                                        background: sending ? "var(--muted)" : "var(--accent)",
-                                        color: "var(--ink)",
-                                        border: "none",
-                                        padding: "13px 28px",
-                                        fontFamily: "var(--font-mono)",
-                                        fontSize: 12,
-                                        letterSpacing: "0.08em",
-                                        cursor: sending ? "wait" : "pointer",
-                                        fontWeight: 500,
-                                        transition: "background 0.2s, transform 0.2s",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        if (!sending)
-                                            (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                                    }}
+                                    disabled={form.formState.isSubmitting}
+                                    className={`self-start px-7 py-[13px] font-mono text-xs font-medium tracking-[0.08em] text-[var(--ink)] transition-all duration-200 ${form.formState.isSubmitting
+                                        ? "cursor-wait bg-[var(--muted)]"
+                                        : "cursor-pointer bg-[var(--accent)] hover:-translate-y-0.5"
+                                        }`}
                                 >
-                                    {sending ? "Sending..." : "Send message →"}
+                                    {form.formState.isSubmitting ? "Sending..." : "Send message →"}
                                 </button>
                             </>
                         )}
                     </form>
                 </Animate>
             </div>
-
-            <style>{`
-        @media (max-width: 768px) {
-          .contact-grid {
-            grid-template-columns: 1fr !important;
-            gap: 48px !important;
-          }
-        }
-      `}</style>
         </div>
     );
 }
@@ -181,36 +173,15 @@ function ContactLink({
     href: string;
     arrow: string;
 }) {
-    const [hovered, setHovered] = useState(false);
-
     return (
         <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px 0",
-                paddingLeft: hovered ? 8 : 0,
-                borderBottom: "1px solid var(--line)",
-                textDecoration: "none",
-                color: hovered ? "var(--heading)" : "var(--body)",
-                transition: "color 0.2s, padding-left 0.2s, border-color 0.4s",
-            }}
+            className="group flex items-center justify-between border-b border-[var(--line)] py-4 text-[var(--body)] no-underline transition-all duration-200 hover:pl-2 hover:text-[var(--heading)]"
         >
-            <span style={{ fontSize: 14 }}>{label}</span>
-            <span
-                style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 13,
-                    color: hovered ? "var(--accent)" : "var(--muted)",
-                    transition: "color 0.2s",
-                }}
-            >
+            <span className="text-sm">{label}</span>
+            <span className="font-mono text-[13px] text-[var(--muted)] transition-colors duration-200 group-hover:text-[var(--accent)]">
                 {arrow}
             </span>
         </a>
@@ -223,62 +194,62 @@ function FormField({
     placeholder,
     value,
     onChange,
+    onBlur,
+    error,
 }: {
     label: string;
     type: "text" | "email" | "textarea";
     placeholder: string;
     value: string;
-    onChange: (v: string) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onBlur: () => void;
+    error?: string;
 }) {
     const [focused, setFocused] = useState(false);
 
-    const sharedStyle: React.CSSProperties = {
-        background: "transparent",
-        border: "none",
-        borderBottom: `1px solid ${focused ? "var(--accent)" : "var(--line)"}`,
-        color: "var(--heading)",
-        fontFamily: "var(--font-sans)",
-        fontSize: 15,
-        padding: "10px 0",
-        outline: "none",
-        width: "100%",
-        transition: "border-color 0.2s, color 0.4s",
-    };
-
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <label
-                style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: focused ? "var(--accent)" : "var(--muted)",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    transition: "color 0.2s",
-                }}
-            >
-                {label}
-            </label>
+        <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+                <label
+                    className={`font-mono text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${focused ? "text-[var(--accent)]" : "text-[var(--muted)]"
+                        }`}
+                >
+                    {label}
+                </label>
+                {error && (
+                    <span className="font-mono text-[10px] text-red-500">
+                        {error}
+                    </span>
+                )}
+            </div>
 
             {type === "textarea" ? (
                 <textarea
                     placeholder={placeholder}
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={onChange}
+                    onBlur={() => {
+                        onBlur();
+                        setFocused(false);
+                    }}
                     onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
                     rows={4}
-                    style={{ ...sharedStyle, resize: "none" }}
+                    className={`w-full resize-none border-0 border-b bg-transparent py-[10px] font-sans text-[15px] text-[var(--heading)] outline-none transition-colors duration-200 ${focused ? "border-[var(--accent)]" : "border-[var(--line)]"
+                        }`}
                 />
             ) : (
                 <input
                     type={type}
                     placeholder={placeholder}
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={onChange}
+                    onBlur={() => {
+                        onBlur();
+                        setFocused(false);
+                    }}
                     onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
-                    style={sharedStyle}
+                    className={`w-full border-0 border-b bg-transparent py-[10px] font-sans text-[15px] text-[var(--heading)] outline-none transition-colors duration-200 ${focused ? "border-[var(--accent)]" : "border-[var(--line)]"
+                        }`}
                 />
             )}
         </div>

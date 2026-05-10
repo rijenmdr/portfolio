@@ -1,47 +1,17 @@
 export default function Footer() {
     return (
         <footer
-            style={{
-                borderTop: "1px solid var(--line)",
-                padding: "24px 40px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: 12,
-                transition: "border-color 0.4s",
-            }}
+            className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] px-10 py-6 transition-colors duration-400"
         >
-            <span
-                style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 11,
-                    color: "var(--muted)",
-                    letterSpacing: "0.04em",
-                }}
-            >
+            <span className="font-mono text-[11px] tracking-[0.04em] text-[var(--muted)]">
                 © 2025 Rijen Manandhar
             </span>
-            <span
-                style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 11,
-                    color: "var(--muted)",
-                    letterSpacing: "0.04em",
-                }}
-            >
+            <span className="font-mono text-[11px] tracking-[0.04em] text-[var(--muted)]">
                 Kathmandu, Nepal · UTC+5:45
             </span>
-            <span
-                style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 11,
-                    color: "var(--muted)",
-                    letterSpacing: "0.04em",
-                }}
-            >
+            <span className="font-mono text-[11px] tracking-[0.04em] text-[var(--muted)]">
                 Designed &amp; built by{" "}
-                <span style={{ color: "var(--accent)" }}>Rijen</span>
+                <span className="text-[var(--accent)]">Rijen</span>
             </span>
         </footer>
     );
